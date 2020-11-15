@@ -3,7 +3,6 @@ package com.example.restaurantapp.activities
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.ListFragment
 import com.example.restaurantapp.R
 import com.example.restaurantapp.databinding.ActivityMainBinding
 import com.example.restaurantapp.fragments.ProfileFragment
