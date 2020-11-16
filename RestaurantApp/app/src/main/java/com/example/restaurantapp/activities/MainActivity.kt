@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         val profileFragment = ProfileFragment()
 
         makeCurrentFragment(listFragment)
-
         binding.bottomNavigationView.setOnNavigationItemSelectedListener {
             when (it.itemId){
                 R.id.ic_restaurants -> makeCurrentFragment(listFragment)
