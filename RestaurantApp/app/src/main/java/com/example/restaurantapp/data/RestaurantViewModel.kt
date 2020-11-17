@@ -22,7 +22,7 @@ class RestaurantViewModel(application: Application): AndroidViewModel(applicatio
         }
     }
 
-    fun getRestaurantById(id: Int): Restaurant{
+    fun getRestaurantById(id: Int): LiveData<Restaurant>{
         return repository.getRestaurantById(id)
     }
 
@@ -32,8 +32,8 @@ class RestaurantViewModel(application: Application): AndroidViewModel(applicatio
         }
     }
 
-    fun getFavoriteRestaurants():LiveData<List<Restaurant>>{
-        return repository.getFavoriteRestaurants
+    fun getFavoriteRestaurants(page: Int, per_page: Int):LiveData<List<Restaurant>>{
+        return repository.getFavoriteRestaurants(page, per_page)
     }
 
     fun getAllRestaurants():LiveData<List<Restaurant>>{

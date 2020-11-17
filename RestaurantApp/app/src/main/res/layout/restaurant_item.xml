@@ -29,6 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="12dp"
+            android:cropToPadding="false"
+            android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
