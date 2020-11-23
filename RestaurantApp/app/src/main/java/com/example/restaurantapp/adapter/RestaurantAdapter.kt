@@ -1,5 +1,6 @@
 package com.example.restaurantapp.adapter
 
+import android.icu.number.NumberFormatter.with
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,7 @@ import com.example.restaurantapp.R
 import com.example.restaurantapp.fragments.ListFragment
 import com.example.restaurantapp.data.Restaurant
 
-class RestaurantAdapter(private val parent: ListFragment, private val listener: OnItemClickListener): RecyclerView.Adapter<RestaurantAdapter.RestaurantViewHolder>() {
+class RestaurantAdapter(private val parent: ListFragment, private val listener: OnItemClickListener): RecyclerView.Adapter<RestaurantAdapter.RestaurantViewHolder>(){
 
     private var restaurantList: MutableList<Restaurant> = mutableListOf()
     private var page = 0
@@ -56,13 +57,20 @@ class RestaurantAdapter(private val parent: ListFragment, private val listener: 
         holder.money.text = restaurantList[position].price.toString()
 
         if(restaurantList[position].favorite){
-            holder.favorite.setImageResource(R.drawable.ic_favorite)
+            Glide.with(parent)
+                    .load(R.drawable.ic_favorite)
+                    .into(holder.favorite)
         } else {
-            holder.favorite.setImageResource(R.drawable.ic_not_favorite)
+            Glide.with(parent)
+                    .load(R.drawable.ic_not_favorite)
+                    .into(holder.favorite)
         }
 
-        Glide.with(parent).load("https://cornulvanatorului.ro/wp-content/uploads/2014/04/restaurant-nunta-960x667.jpeg".toUri()).into(holder.image)
+        Glide.with(parent)
+            .load(restaurantList[position].image_url.toUri())
+            .into(holder.image)
     }
+
 
     override fun getItemCount(): Int {
         return restaurantList.size
@@ -70,9 +78,14 @@ class RestaurantAdapter(private val parent: ListFragment, private val listener: 
 
 
     fun setData(newList: List<Restaurant>, newPage: Int){
-        restaurantList.addAll(newList)
-        page = newPage
-        notifyDataSetChanged()
+        if(newList.isNotEmpty()){
+            restaurantList.addAll(newList)
+
+            restaurantList = restaurantList.distinct().toMutableList()
+
+            page = newPage
+            notifyDataSetChanged()
+        }
     }
 
     fun getPage(): Int{
@@ -84,7 +97,7 @@ class RestaurantAdapter(private val parent: ListFragment, private val listener: 
     }
 
     fun removeRestaurant(position: Int){
-        restaurantList.drop(position)
+        restaurantList.removeAt(position)
         notifyItemRemoved(position)
     }
 
@@ -96,14 +109,13 @@ class RestaurantAdapter(private val parent: ListFragment, private val listener: 
         if(mode){
             room = true
             page = 0
-            restaurantList.clear()
-            notifyDataSetChanged()
         } else{
             room = false
             page = 1
-            restaurantList.clear()
-            notifyDataSetChanged()
         }
+
+        restaurantList = mutableListOf()
+        notifyDataSetChanged()
     }
 
     interface OnItemClickListener {

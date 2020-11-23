@@ -33,6 +33,7 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var lifecycleOwner: Fragment
     private val restaurantViewModel by lazy { activity?.application?.let { RestaurantViewModel(it) } }
+    private val queryMap = mutableMapOf(Pair("per_page", PER_PAGE.toString()))
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +52,6 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
         val viewModelFactory = ListViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(ListViewModel::class.java)
 
-        val queryMap = mutableMapOf(Pair("country", "US"))
-        queryMap["per_page"] = PER_PAGE.toString()
-
-        adapter.setRoomMode(true)
         loadDataFromRoom(0)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -72,6 +69,27 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
         view.findViewById<ImageView>(R.id.imageView5).setOnClickListener {
             val searchBar = view.findViewById<CardView>(R.id.cardView2)
             toggleSearchBar(searchBar)
+        }
+
+        view.findViewById<Button>(R.id.button).setOnClickListener{
+            adapter.setRoomMode(false)
+
+            val name = view.findViewById<EditText>(R.id.searchView).text.toString()
+            val city = view.findViewById<EditText>(R.id.autoCompleteTextView).text.toString()
+            val price = view.findViewById<Spinner>(R.id.spinner2).selectedItem.toString()
+
+            if (name == "" && city == "" && price == "Price"){
+                Toast.makeText(context, "Fill out at least one field!", Toast.LENGTH_SHORT).show()
+            } else{
+                queryMap["name"] = name
+                queryMap["city"] = city
+
+                queryMap["price"] = price
+
+                queryMap["page"] = "1"
+
+                loadDataFromApi(queryMap)
+            }
         }
 
         return view
@@ -115,10 +133,15 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
         if (adapter.isRoomMode()){
             it.setImageResource(R.drawable.ic_not_favorite)
             adapter.setRoomMode(false)
-            loadDataFromApi(queryMap)
+
+            val newQueryMap = queryMap.toMutableMap()
+            newQueryMap["page"] = "1"
+
+            loadDataFromApi(newQueryMap)
         } else {
             it.setImageResource(R.drawable.ic_favorite)
             adapter.setRoomMode(true)
+
             loadDataFromRoom(0)
         }
     }
@@ -126,19 +149,19 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
     private fun handleOnScroll(queryMap: Map<String, String>){
         val page = adapter.getPage()
 
-        val count = recyclerView.layoutManager?.itemCount
-        val firstVisible = linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+        val visibleItemCount = linearLayoutManager.childCount
+        val itemCount = recyclerView.layoutManager?.itemCount
+        val firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition()
 
-        Log.d("Index", "$firstVisible $count $page")
-        if( count != null){
+        if( itemCount != null){
             if(adapter.isRoomMode()){
                 // next page
-                if (count-3 == firstVisible){
+                if (visibleItemCount + firstVisibleItemPosition >= itemCount-2 && firstVisibleItemPosition >= 0){
                     loadDataFromRoom(page + 1)
                 }
             } else {
                 // next page
-                if (count-3 == firstVisible){
+                if (visibleItemCount + firstVisibleItemPosition >= itemCount-2 && firstVisibleItemPosition >= 0){
                     val newQueryMap = queryMap.toMutableMap()
                     newQueryMap["page"] = (page + 1).toString()
 
@@ -152,7 +175,7 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
     private fun loadDataFromRoom(page: Int){
         restaurantViewModel?.getFavoriteRestaurants(page, PER_PAGE)?.observe(this, {
             if (it.isNotEmpty()) {
-                adapter.setData(it, page)
+                    adapter.setData(it, page)
             }
         })
     }
@@ -194,6 +217,11 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
         val restaurant = adapter.getRestaurant(position)
         restaurantViewModel?.addRestaurant(restaurant)
 
+        val bundle = Bundle()
+
+        bundle.putInt("id", restaurant.id)
+        details.arguments = bundle
+
         activity!!.supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentHolder, details)
                 .addToBackStack(null)
@@ -202,7 +230,6 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
 
     override fun onFavoriteClicked(position: Int) {
         val favorite = linearLayoutManager.findViewByPosition(position)?.findViewById<ImageView>(R.id.favorite)
-
         val restaurant = adapter.getRestaurant(position)
 
         if (restaurant.favorite){
@@ -219,7 +246,6 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
             if (adapter.isRoomMode()){
                 adapter.removeRestaurant(position)
             }
-
         } else {
             favorite?.setImageResource(R.drawable.ic_favorite)
 
