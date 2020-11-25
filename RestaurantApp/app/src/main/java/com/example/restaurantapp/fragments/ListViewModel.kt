@@ -3,8 +3,8 @@ package com.example.restaurantapp.fragments
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.restaurantapp.data.CitiesResponseData
-import com.example.restaurantapp.data.RestaurantResponseData
+import com.example.restaurantapp.data.restaurant.CitiesResponseData
+import com.example.restaurantapp.data.restaurant.RestaurantResponseData
 import com.example.restaurantapp.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response

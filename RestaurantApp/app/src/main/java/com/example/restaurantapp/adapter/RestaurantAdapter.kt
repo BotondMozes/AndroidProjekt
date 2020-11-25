@@ -1,7 +1,5 @@
 package com.example.restaurantapp.adapter
 
-import android.icu.number.NumberFormatter.with
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.restaurantapp.R
 import com.example.restaurantapp.fragments.ListFragment
-import com.example.restaurantapp.data.Restaurant
+import com.example.restaurantapp.data.restaurant.Restaurant
 
 class RestaurantAdapter(private val parent: ListFragment, private val listener: OnItemClickListener): RecyclerView.Adapter<RestaurantAdapter.RestaurantViewHolder>(){
 
@@ -92,7 +90,7 @@ class RestaurantAdapter(private val parent: ListFragment, private val listener: 
         return page
     }
 
-    fun getRestaurant(position: Int): Restaurant{
+    fun getRestaurant(position: Int): Restaurant {
         return restaurantList[position]
     }
 

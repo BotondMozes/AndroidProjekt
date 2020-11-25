@@ -1,17 +1,23 @@
 package com.example.restaurantapp.fragments
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.restaurantapp.R
-import com.example.restaurantapp.data.Restaurant
-import com.example.restaurantapp.data.RestaurantViewModel
+import com.example.restaurantapp.data.restaurant.Restaurant
+import com.example.restaurantapp.data.restaurant.RestaurantViewModel
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -51,6 +57,33 @@ class DetailsFragment : Fragment(), OnMapReadyCallback {
 
             loadData(id, view)
         }
+
+        view.findViewById<ImageView>(R.id.imageView7).setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                if (checkSelfPermission(context!!, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                        PackageManager.PERMISSION_DENIED){
+                    //permission denied
+                    val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
+                    //show popup to request runtime permission
+                    requestPermissions(permissions, PERMISSION_CODE);
+                }
+                else{
+                    //permission already granted
+                    pickImageFromGallery();
+                }
+            }
+            else{
+                //system OS is < Marshmallow
+                pickImageFromGallery();
+            }
+        }
+    }
+
+    companion object {
+        //image pick code
+        private const val IMAGE_PICK_CODE = 1000;
+        //Permission code
+        private const val PERMISSION_CODE = 1001;
     }
 
     private fun loadData(id: Int, view: View){
@@ -77,12 +110,7 @@ class DetailsFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
-
-        Log.d("LOG", restaurant.lat.toString())
-
         val myPlace = LatLng(restaurant.lat.toDouble(), restaurant.lng.toDouble())
-
-        Log.d("LOG", myPlace.toString())
 
         googleMap?.addMarker(
                 MarkerOptions()
@@ -100,6 +128,48 @@ class DetailsFragment : Fragment(), OnMapReadyCallback {
     override fun onDestroy() {
         super.onDestroy()
         mMapView!!.onDestroy()
+
+        if (!restaurant.favorite && !restaurant.new_image){
+            restaurantViewModel?.deleteRestaurant(restaurant)
+        }
     }
 
+    //handle requested permission result
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when(requestCode){
+            PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED){
+                    //permission from popup granted
+                    pickImageFromGallery()
+                }
+                else{
+                    //permission from popup denied
+                    Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    //handle result of picked image
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+            val imageHolder = view!!.findViewById<ImageView>(R.id.imageView6)
+            Glide.with(this)
+                    .load(data?.data)
+                    .into(imageHolder)
+
+            restaurant.image_url = data?.data.toString()
+            restaurant.new_image = true
+
+            restaurantViewModel?.addRestaurant(restaurant)
+        }
+    }
+
+    private fun pickImageFromGallery() {
+        //Intent to pick image
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, IMAGE_PICK_CODE)
+    }
 }

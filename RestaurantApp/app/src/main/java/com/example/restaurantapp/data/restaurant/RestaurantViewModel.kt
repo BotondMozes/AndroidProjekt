@@ -1,4 +1,4 @@
-package com.example.restaurantapp.data
+package com.example.restaurantapp.data.restaurant
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

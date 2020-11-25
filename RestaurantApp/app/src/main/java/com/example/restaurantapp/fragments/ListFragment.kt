@@ -2,7 +2,6 @@ package com.example.restaurantapp.fragments
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.restaurantapp.R
 import com.example.restaurantapp.adapter.RestaurantAdapter
-import com.example.restaurantapp.data.RestaurantViewModel
+import com.example.restaurantapp.data.restaurant.RestaurantViewModel
 import com.example.restaurantapp.repository.Repository
 import com.example.restaurantapp.utils.Constants.Companion.PER_PAGE
 import kotlin.collections.Map

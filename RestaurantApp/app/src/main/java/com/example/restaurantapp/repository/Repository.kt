@@ -1,8 +1,8 @@
 package com.example.restaurantapp.repository
 
 import com.example.restaurantapp.api.RetrofitInstance
-import com.example.restaurantapp.data.CitiesResponseData
-import com.example.restaurantapp.data.RestaurantResponseData
+import com.example.restaurantapp.data.restaurant.CitiesResponseData
+import com.example.restaurantapp.data.restaurant.RestaurantResponseData
 import retrofit2.Response
 
 class Repository {

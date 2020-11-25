@@ -1,4 +1,4 @@
-package com.example.restaurantapp.data
+package com.example.restaurantapp.data.restaurant
 
 import android.content.Context
 import androidx.room.Database
@@ -14,7 +14,7 @@ abstract class RestaurantDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: RestaurantDatabase? = null
 
-        fun getRestaurantDatabase(context: Context): RestaurantDatabase{
+        fun getRestaurantDatabase(context: Context): RestaurantDatabase {
             val tempInstance = INSTANCE
             if(tempInstance != null){
                 return tempInstance

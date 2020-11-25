@@ -1,7 +1,7 @@
 package com.example.restaurantapp.api
 
-import com.example.restaurantapp.data.CitiesResponseData
-import com.example.restaurantapp.data.RestaurantResponseData
+import com.example.restaurantapp.data.restaurant.CitiesResponseData
+import com.example.restaurantapp.data.restaurant.RestaurantResponseData
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.QueryMap

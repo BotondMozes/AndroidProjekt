@@ -1,4 +1,4 @@
-package com.example.restaurantapp.data
+package com.example.restaurantapp.data.restaurant
 
 import androidx.lifecycle.LiveData
 import androidx.room.*

@@ -9,5 +9,4 @@ class ListViewModelFactory(private val repository: Repository): ViewModelProvide
         @Suppress("UNCHECKED_CAST")
         return ListViewModel(repository) as T
     }
-
 }

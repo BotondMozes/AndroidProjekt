@@ -1,4 +1,4 @@
-package com.example.restaurantapp.data
+package com.example.restaurantapp.data.restaurant
 
 data class RestaurantResponseData (
         val total_entries: Int,
