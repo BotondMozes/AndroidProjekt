@@ -2,11 +2,11 @@ package com.example.restaurantapp.fragments
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.example.restaurantapp.R
+import com.example.restaurantapp.activities.MainActivity
 import com.example.restaurantapp.data.user.User
 import com.example.restaurantapp.data.user.UserViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -68,6 +69,15 @@ class ProfileFragment : Fragment() {
             if (saveUser()){
                 toggleEditMode(false)
             }
+        }
+
+        favoritesButton.setOnClickListener{
+            val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
+            with (sharedPref!!.edit()) {
+                putInt("Favorite", 1)
+                apply()
+            }
+            (activity as MainActivity).makeCurrentFragment((activity as MainActivity).listFragment)
         }
     }
 

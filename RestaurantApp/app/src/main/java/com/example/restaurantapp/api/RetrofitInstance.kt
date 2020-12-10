@@ -1,6 +1,5 @@
 package com.example.restaurantapp.api
 
-import android.util.Log
 import com.example.restaurantapp.utils.Constants.Companion.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

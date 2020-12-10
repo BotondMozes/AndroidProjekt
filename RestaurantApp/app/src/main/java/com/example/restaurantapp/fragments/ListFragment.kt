@@ -1,9 +1,13 @@
 package com.example.restaurantapp.fragments
 
+import android.content.Context
 import android.content.res.Resources
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.*
 import androidx.cardview.widget.CardView
@@ -12,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.restaurantapp.R
 import com.example.restaurantapp.adapter.RestaurantAdapter
 import com.example.restaurantapp.data.restaurant.RestaurantViewModel
@@ -75,23 +80,38 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
 
             val name = view.findViewById<EditText>(R.id.searchView).text.toString()
             val city = view.findViewById<EditText>(R.id.autoCompleteTextView).text.toString()
-            val price = view.findViewById<Spinner>(R.id.spinner2).selectedItem.toString()
 
-            if (name == "" && city == "" && price == "Price"){
+            if (name == "" && city == ""){
                 Toast.makeText(context, "Fill out at least one field!", Toast.LENGTH_SHORT).show()
             } else{
                 queryMap["name"] = name
                 queryMap["city"] = city
 
-                queryMap["price"] = price
-
                 queryMap["page"] = "1"
 
+                adapter.setRoomMode(false)
+
                 loadDataFromApi(queryMap)
+                Glide.with(this)
+                        .load(R.drawable.ic_not_favorite)
+                        .into(view.findViewById(R.id.imageView4))
             }
         }
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val mode = sharedPref.getInt("Favorite", 0)
+
+        if(mode == 1) {
+            loadDataFromRoom(0)
+            view!!.findViewById<CardView>(R.id.cardView2).visibility = GONE
+        } else {
+            view!!.findViewById<CardView>(R.id.cardView2).visibility = VISIBLE
+        }
     }
 
     private fun setCities(view: AutoCompleteTextView){
@@ -103,7 +123,7 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
 
                 view.setAdapter(arrayAdapter);
             } else {
-                Toast.makeText(context, response.code(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, response.code().toString(), Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -115,16 +135,14 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
             }
             searchBar.findViewById<EditText>(R.id.searchView).visibility = View.VISIBLE
             searchBar.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView).visibility = View.VISIBLE
-            searchBar.findViewById<Spinner>(R.id.spinner2).visibility = View.VISIBLE
             searchBar.findViewById<Button>(R.id.button).visibility = View.VISIBLE
         } else {
             searchBar.updateLayoutParams{
                 height = (40 * Resources.getSystem().displayMetrics.density).toInt()
             }
-            searchBar.findViewById<EditText>(R.id.searchView).visibility = View.GONE
-            searchBar.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView).visibility = View.GONE
-            searchBar.findViewById<Spinner>(R.id.spinner2).visibility = View.GONE
-            searchBar.findViewById<Button>(R.id.button).visibility = View.GONE
+            searchBar.findViewById<EditText>(R.id.searchView).visibility = GONE
+            searchBar.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView).visibility = GONE
+            searchBar.findViewById<Button>(R.id.button).visibility = GONE
         }
     }
 
@@ -192,12 +210,17 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
                                 if(it.favorite){
                                     res.favorite = true
                                 }
-                                // TODO replace image if exists
+                                if(it.new_image){
+                                    res.image_url = it.image_url
+                                    res.new_image = true
+                                }
                             }
                         })
                     }
                     page?.let { adapter.setData(restaurants, it) }
-                }
+                }// else {
+                 //   Toast.makeText(context, "No suitable restaurants!", Toast.LENGTH_SHORT).show()
+                //}
             } else {
                 Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show()
             }

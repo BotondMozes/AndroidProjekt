@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RestaurantApp">
 
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -23,10 +24,12 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCNqUuVgv5IxOIJiTMcPDBVOGu87sadUBU" />
 
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".activities.SplashActivity"
-            android:theme="@style/Splash">
+            android:theme="@style/Splash"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
