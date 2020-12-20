@@ -241,7 +241,7 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
 
         val bundle = Bundle()
 
-        bundle.putInt("id", restaurant.id)
+        bundle.putLong("id", restaurant.id)
         details.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()

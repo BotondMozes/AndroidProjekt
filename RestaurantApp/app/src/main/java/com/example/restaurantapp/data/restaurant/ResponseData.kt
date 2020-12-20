@@ -8,6 +8,6 @@ data class RestaurantResponseData (
 )
 
 data class CitiesResponseData(
-        val count: Int,
+        //val count: Int,
         val cities: List<String>
 )

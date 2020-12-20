@@ -52,8 +52,8 @@ class DetailsFragment : Fragment(), OnMapReadyCallback {
             e.printStackTrace()
         }
 
-        if(arguments?.getInt("id") != null){
-            val id = arguments!!.getInt("id")
+        if(arguments?.getLong("id") != null){
+            val id = arguments!!.getLong("id")
 
             loadData(id, view)
         }
@@ -86,7 +86,7 @@ class DetailsFragment : Fragment(), OnMapReadyCallback {
         private const val PERMISSION_CODE = 1001;
     }
 
-    private fun loadData(id: Int, view: View){
+    private fun loadData(id: Long, view: View){
         restaurantViewModel?.getRestaurantById(id)?.observe(this, {
             if (it != null) {
                 restaurant = it

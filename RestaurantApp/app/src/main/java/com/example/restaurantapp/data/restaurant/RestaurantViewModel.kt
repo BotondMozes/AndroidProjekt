@@ -22,7 +22,7 @@ class RestaurantViewModel(application: Application): AndroidViewModel(applicatio
         }
     }
 
-    fun getRestaurantById(id: Int): LiveData<Restaurant>{
+    fun getRestaurantById(id: Long): LiveData<Restaurant>{
         return repository.getRestaurantById(id)
     }
 

@@ -10,7 +10,7 @@ class RestaurantRepository(private val restaurantDao: RestaurantDao) {
         restaurantDao.addRestaurant(restaurant)
     }
 
-    fun getRestaurantById(id: Int): LiveData<Restaurant>{
+    fun getRestaurantById(id: Long): LiveData<Restaurant>{
         return restaurantDao.getRestaurantById(id)
     }
 

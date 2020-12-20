@@ -13,7 +13,7 @@ interface RestaurantDao {
     fun readAllData(): LiveData<List<Restaurant>>
 
     @Query("SELECT * FROM restaurants WHERE id == :id")
-    fun getRestaurantById(id: Int): LiveData<Restaurant>
+    fun getRestaurantById(id: Long): LiveData<Restaurant>
 
     @Query("SELECT * FROM restaurants WHERE favorite == 1 LIMIT :per_page OFFSET :page*:per_page")
     fun getFavoriteRestaurants(page: Int, per_page: Int): LiveData<List<Restaurant>>
