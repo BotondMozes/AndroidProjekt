@@ -1,5 +1,6 @@
 package com.example.restaurantapp.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,7 +81,7 @@ class RestaurantAdapter(private val parent: ListFragment, private val listener: 
             restaurantList.addAll(newList)
 
             restaurantList = restaurantList.distinct().toMutableList()
-
+            Log.d("PAGE", newPage.toString())
             page = newPage
             notifyDataSetChanged()
         }

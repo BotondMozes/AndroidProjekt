@@ -202,7 +202,7 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
         viewModel.myResponse.observe(lifecycleOwner, { response ->
             if (response.isSuccessful) {
                 val restaurants = response.body()?.restaurants?.toMutableList()
-                val page = response.body()?.current_page
+                val page = response.body()?.page
                 if (restaurants!!.isNotEmpty()) {
                     for (res in restaurants){
                         restaurantViewModel?.getRestaurantById(res.id)?.observe(this, {

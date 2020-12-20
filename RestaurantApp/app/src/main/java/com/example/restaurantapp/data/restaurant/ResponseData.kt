@@ -3,7 +3,7 @@ package com.example.restaurantapp.data.restaurant
 data class RestaurantResponseData (
         val total_entries: Int,
         val per_page: Int,
-        val current_page: Int,
+        val page: Int,
         val restaurants: List<Restaurant>
 )
 
