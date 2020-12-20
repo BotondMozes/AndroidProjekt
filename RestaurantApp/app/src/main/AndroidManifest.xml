@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCNqUuVgv5IxOIJiTMcPDBVOGu87sadUBU" />
+            android:value="" />
 
         <activity android:name=".activities.MainActivity"
             android:screenOrientation="portrait" />
