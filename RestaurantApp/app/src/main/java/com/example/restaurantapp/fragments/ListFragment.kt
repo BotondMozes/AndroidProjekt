@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -106,7 +107,10 @@ class ListFragment : Fragment(), RestaurantAdapter.OnItemClickListener {
         val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
         val mode = sharedPref.getInt("Favorite", 0)
 
+        Log.d("MODE", mode.toString())
+
         if(mode == 1) {
+            adapter.setRoomMode(true)
             loadDataFromRoom(0)
             view!!.findViewById<CardView>(R.id.cardView2).visibility = GONE
         } else {
